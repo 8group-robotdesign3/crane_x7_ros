@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(crane_x7_examples)
-
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  roscpp
   std_msgs
   geometry_msgs
   message_generation
@@ -35,7 +36,8 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
 )
-
+add_executable(main_node src/main_node.cpp)
+target_link_libraries(main_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##
