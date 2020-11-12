@@ -24,29 +24,28 @@ private:
         end_node4    //7
     };
 
+    ros::NodeHandle &nh;
+
     PROG progress;
 
     void topicCallback(const std_msgs::Int32 &data);
-
-    ros::NodeHandle &nh;
 
     ros::Subscriber sub;
 
     ros::Publisher pub;
 
-    std::string Topic_name; // control_progress
+    std::string Topic_name; // report_progress
 };
 
-MainNode::MainNode(ros::NodeHandle &nodehandle) : nh(nodehandle), Topic_name("control_progress")
+MainNode::MainNode(ros::NodeHandle &nodehandle) : nh(nodehandle), Topic_name("report_progress"), progress(PROG::start_node1)
 {
-    PROG progress = PROG::start_node1;
     sub = nh.subscribe(Topic_name, 1, &MainNode::topicCallback, this);
-    pub = nh.advertise<std_msgs::Int32>(Topic_name, 1);
-    ROS_INFO("Successfully launched node.");
+    pub = nh.advertise<std_msgs::Int32>("activate_node", 1);
+    ROS_INFO("Successfully launched main_node");
 }
 
-MainNode::~MainNode(){
-    
+MainNode::~MainNode()
+{
 }
 void MainNode::topicCallback(const std_msgs::Int32 &data)
 {
@@ -63,8 +62,7 @@ void MainNode::topicCallback(const std_msgs::Int32 &data)
     }
     else if (receive == PROG::end_node3)
     {
-        progress = PROG::start_node4;
-        ROS_INFO("start_node4");
+        ROS_INFO("finish performance");
     }
     return;
 }
@@ -72,7 +70,9 @@ void MainNode::topicCallback(const std_msgs::Int32 &data)
 void MainNode::send()
 {
     std_msgs::Int32 msg;
-    msg.data = static_cast<int32_t>(progress);
+    int32_t sending_data = static_cast<int32_t>(progress);
+    msg.data = sending_data;
+    //ROS_INFO("%d", sending_data);
     pub.publish(msg);
 }
 
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "main_node");
     ros::NodeHandle nodeHandle("~");
     MainNode main_node(nodeHandle);
-    ros::Rate r(10);
+    ros::Rate r(100);
     while (ros::ok())
     {
         main_node.send();

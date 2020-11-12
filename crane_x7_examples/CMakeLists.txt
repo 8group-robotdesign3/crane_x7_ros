@@ -44,8 +44,8 @@ target_link_libraries(main_node ${catkin_LIBRARIES})
 #############
 
 install(PROGRAMS
-  scripts/crane_x7_pick_and_place_demo.py
-  scripts/gripper_action_example.py
-  scripts/pose_groupstate_example.py
+  #scripts/node1_pickup.py
+  #scripts/node2_nagemae.py
+  #scripts/node3_throw.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
